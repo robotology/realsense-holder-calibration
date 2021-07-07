@@ -64,12 +64,8 @@ bool Calibration::RetrieveTheData(yarp::os::Bottle rf_poses_group)
 
         /* Check if the vector is nulla. */
         if(b == nullptr)
-        {
+            return false;
 
-            throw(std::runtime_error("The vector is empty"));
-            return false
-
-        }
         for (std::size_t j=0; j<b->size(); j++)
         {
             /* Get the jth value of the single pose. */
