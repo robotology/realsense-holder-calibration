@@ -107,12 +107,12 @@ bool Calibration::updateModule()
             start_time_ = std::chrono::steady_clock::now();
 
             /* Set the new position of the joints. */
-            position_control_["torso"]->positionMove(0, joints_[counter_poses_][0]);
-            position_control_["torso"]->positionMove(1, joints_[counter_poses_][1]);
-            position_control_["torso"]->positionMove(2, joints_[counter_poses_][2]);
-            position_control_["head"]->positionMove(0, joints_[counter_poses_][3]);
-            position_control_["head"]->positionMove(1, joints_[counter_poses_][4]);
-            position_control_["head"]->positionMove(2, joints_[counter_poses_][5]);
+            std::vector<int> joints {0, 1, 2};
+            std::vector<double> joints_torso {joints_[counter_poses_][0], joints_[counter_poses_][1], joints_[counter_poses_][2]};
+            std::vector<double> joints_head {joints_[counter_poses_][3], joints_[counter_poses_][4], joints_[counter_poses_][5]};
+
+            position_control_["torso"]->positionMove(joints.size(), joints.data(), joints_torso.data());
+            position_control_["head"]->positionMove(joints.size(), joints.data(), joints_head.data());
 
             set_state(State::Wait);
 
