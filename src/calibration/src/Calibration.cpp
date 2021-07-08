@@ -273,6 +273,15 @@ yarp::sig::Matrix Calibration::ee_pose()
 }
 
 
+void Calibration::stop_motion()
+{
+    std::vector<int> joints {0, 1, 2};
+
+    position_control_["torso"]->stop(joints.size(), joints.data());
+    position_control_["head"]->stop(joints.size(), joints.data());
+}
+
+
 std::string Calibration::start()
 {
     /* TODO. */

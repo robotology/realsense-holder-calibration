@@ -60,6 +60,9 @@ private:
     /* Retrieve the end effector pose. */
     yarp::sig::Matrix ee_pose();
 
+    /* Stop robot motion. */
+    void stop_motion();
+
     /* Forward kinematics of the robot neck. */
     iCub::iKin::iCubHeadCenter icub_head_center_;
 
