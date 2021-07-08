@@ -46,12 +46,15 @@ public:
     /*
      * IDL interface.
      */
+
+    std::string quit() override;
+
     std::string start() override;
 
     std::string stop() override;
 
     /* Module state. */
-    enum class State{Idle, NextPose, Wait, Store, Stop};
+    enum class State{Idle, NextPose, Wait, Store, Stop, Quit};
 
 private:
 

@@ -131,6 +131,14 @@ bool Calibration::updateModule()
             break;
         }
 
+        case State::Quit:
+        {
+            stop_motion();
+
+            /* This will cause the RFModule to shutdown. */
+            return false;
+        }
+
         case State::Store:
         {
             /* Get the end-effector pose. */
@@ -313,6 +321,16 @@ Calibration::State Calibration::get_state()
     mutex_.unlock();
 
     return state;
+}
+
+
+std::string Calibration::quit()
+{
+    /* Stop robot motion and quit the module. */
+
+    set_state(State::Quit);
+
+    return "Command accepted.";
 }
 
 
