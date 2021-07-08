@@ -149,9 +149,9 @@ bool Calibration::updateModule()
                 state_ = State::Idle;
             else
                 state_ = State::NextPose;
-        }
 
-        break;
+            break;
+        }
     }
 
     return true;
