@@ -91,11 +91,15 @@ double Calibration::getPeriod()
 
 bool Calibration::updateModule()
 {
-    switch(state_)
+    State state = get_state();
+
+    switch(state)
     {
         case State::Idle:
+        {
             /* Do nothing */
             break;
+        }
 
         case State::NextPose:
         {
@@ -110,7 +114,7 @@ bool Calibration::updateModule()
             position_control_["head"]->positionMove(1, joints_[counter_poses_][4]);
             position_control_["head"]->positionMove(2, joints_[counter_poses_][5]);
 
-            state_ = State::Wait;
+            set_state(State::Wait);
 
             /* Increment the counter of the pose. */
             counter_poses_++;
@@ -122,7 +126,7 @@ bool Calibration::updateModule()
         {
             /* Check if wait time elapsed. */
             if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start_time_).count() > wait_time_)
-                state_ = State::Store;
+                set_state(State::Store);
 
             break;
         }
@@ -146,9 +150,18 @@ bool Calibration::updateModule()
 
             /* Check if the are still configuration to be executed. */
             if (counter_poses_ == number_of_poses_)
-                state_ = State::Idle;
+                set_state(State::Idle);
             else
-                state_ = State::NextPose;
+                set_state(State::NextPose);
+
+            break;
+        }
+
+        case State::Stop:
+        {
+            stop_motion();
+
+            set_state(State::Idle);
 
             break;
         }
@@ -282,9 +295,32 @@ void Calibration::stop_motion()
 }
 
 
+
+void Calibration::set_state(const State& state)
+{
+    mutex_.lock();
+    state_ = state;
+    mutex_.unlock();
+}
+
+
+Calibration::State Calibration::get_state()
+{
+    State state;
+
+    mutex_.lock();
+    state = state_;
+    mutex_.unlock();
+
+    return state;
+}
+
+
 std::string Calibration::start()
 {
-    /* TODO. */
+    /* Start data collection. */
+
+    set_state(State::NextPose);
 
     return "Command accepted.";
 }
@@ -292,7 +328,9 @@ std::string Calibration::start()
 
 std::string Calibration::stop()
 {
-    /* TODO. */
+    /* Immediately stop robot motion. */
+
+    set_state(State::Stop);
 
     return "Command accepted.";
 }

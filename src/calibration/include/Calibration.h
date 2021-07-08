@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <unordered_map>
 #include <vector>
 
@@ -49,6 +50,9 @@ public:
 
     std::string stop() override;
 
+    /* Module state. */
+    enum class State{Idle, NextPose, Wait, Store, Stop};
+
 private:
 
     /* Open robot devices. */
@@ -62,6 +66,12 @@ private:
 
     /* Stop robot motion. */
     void stop_motion();
+
+    /* Set module state. */
+    void set_state(const Calibration::State& state);
+
+    /* Get module state. */
+    Calibration::State get_state();
 
     /* Forward kinematics of the robot neck. */
     iCub::iKin::iCubHeadCenter icub_head_center_;
@@ -87,11 +97,11 @@ private:
     std::vector<std::vector<double>> joints_;
 
     /* Module state. */
-    enum class State{Idle, NextPose, Wait, Store};
     State state_;
 
-    /* RPC port. */
+    /* RPC port and related. */
     yarp::os::Port port_rpc_;
+    std::mutex mutex_;
 
     /* Name to be used in messages. */
     const std::string log_name_ = "Calibration";
