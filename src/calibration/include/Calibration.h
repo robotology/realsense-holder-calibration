@@ -29,7 +29,36 @@
 class Calibration : public yarp::os::RFModule,
                     public CalibrationIDL
 {
+public:
+
+    /*
+     * RFModule interface.
+     */
+    bool configure(yarp::os::ResourceFinder& rf) override;
+
+    bool close() override;
+
+    double getPeriod() override;
+
+    bool updateModule() override;
+
+    /*
+     * IDL interface.
+     */
+    std::string start() override;
+
+    std::string stop() override;
+
 private:
+
+    /* Open robot devices. */
+    bool open_remote_control_board(const std::string&, const std::string&);
+
+    /* Retrieve joints configurations for calibration. */
+    bool get_joints_configuration(const yarp::os::ResourceFinder& rf);
+
+    /* Retrieve the end effector pose. */
+    yarp::sig::Matrix ee_pose();
 
     /* Forward kinematics of the robot neck. */
     iCub::iKin::iCubHeadCenter icub_head_center_;
@@ -58,40 +87,11 @@ private:
     enum class State{Idle, NextPose, Wait, Store};
     State state_;
 
-    /* Name to be used in messages. */
-    const std::string log_name_ = "Calibration";
-
-    /* Open robot devices. */
-    bool open_remote_control_board(const std::string&, const std::string&);
-
-    /* Retrieve joints configurations for calibration. */
-    bool get_joints_configuration(const yarp::os::ResourceFinder& rf);
-
-    /* Retrieve the end effector pose. */
-    yarp::sig::Matrix ee_pose();
-
     /* RPC port. */
     yarp::os::Port port_rpc_;
 
-public:
-
-    /*
-     * RFModule interface.
-     */
-    bool configure(yarp::os::ResourceFinder& rf) override;
-
-    bool close() override;
-
-    double getPeriod() override;
-
-    bool updateModule() override;
-
-    /*
-     * IDL interface.
-     */
-    std::string start() override;
-
-    std::string stop() override;
+    /* Name to be used in messages. */
+    const std::string log_name_ = "Calibration";
 };
 
 #endif /* CALIBRATION_H */
