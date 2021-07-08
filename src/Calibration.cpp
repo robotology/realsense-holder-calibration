@@ -19,7 +19,7 @@ using namespace iCub::iKin;
 bool Calibration::configure(ResourceFinder &rf)
 {
     /* Get the robot name. */
-    robot_name_ = rf.check("robot_name", Value("icub")).asString();
+    std::string robot_name = rf.check("robot_name", Value("icub")).asString();
 
     /* Get the wait time. */
     wait_time_ = rf.check("wait_time", Value(5.0)).asDouble();
@@ -42,11 +42,11 @@ bool Calibration::configure(ResourceFinder &rf)
         return false;
 
     /* Open torso control board. */
-    if(!open_remote_control_board(robot_name_, "torso"))
+    if(!open_remote_control_board(robot_name, "torso"))
         return false;
 
     /* Opem head control board. */
-    if(!open_remote_control_board(robot_name_, "head"))
+    if(!open_remote_control_board(robot_name, "head"))
         return false;
 
     /* Configure the forward kinematics. */
@@ -146,14 +146,14 @@ bool Calibration::updateModule()
 }
 
 
-bool Calibration::open_remote_control_board(const std::string& robot, const std::string& part_name)
+bool Calibration::open_remote_control_board(const std::string& robot_name, const std::string& part_name)
 {
     Property prop;
 
     /* Set the property of the device. */
     prop.put("device", "remote_controlboard");
     prop.put("local", "/realsense-holder-calibration/" + part_name);
-    prop.put("remote", "/" + robot_name_ + "/" + part_name);
+    prop.put("remote", "/" + robot_name + "/" + part_name);
 
     /* Try to open the driver. */
     if (!drivers_[part_name].open(prop))

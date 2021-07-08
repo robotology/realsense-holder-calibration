@@ -28,9 +28,6 @@ class Calibration : public yarp::os::RFModule
 {
 private:
 
-    /* Store the name of the robot. */
-    std::string robot_name_;
-
     /* Forward kinematics of the robot neck. */
     iCub::iKin::iCubHeadCenter icub_head_center_;
 
