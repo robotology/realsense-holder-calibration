@@ -24,6 +24,9 @@ bool Calibration::configure(ResourceFinder &rf)
     /* Get the wait time. */
     wait_time_ = rf.check("wait_time", Value(5.0)).asDouble();
 
+    /* Get the eye version. */
+    std::string eye_version = rf.check("eye_version", Value("v2")).asString();
+
     /* Get the number of poses. */
     Value number_of_poses_value = rf.find("number_of_poses");
     if (number_of_poses_value.isNull())
@@ -47,7 +50,7 @@ bool Calibration::configure(ResourceFinder &rf)
         return false;
 
     /* Configure the forward kinematics. */
-    icub_head_center_ = iCubHeadCenter("right_v2");
+    icub_head_center_ = iCubHeadCenter("right_" + eye_version);
     icub_head_center_.releaseLink(0);
     icub_head_center_.releaseLink(1);
     icub_head_center_.releaseLink(2);
