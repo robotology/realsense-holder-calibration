@@ -26,6 +26,8 @@ int main (int argc, char** argv)
     }
 
     ResourceFinder rf;
+    rf.setDefaultContext("realsense-holder-calibration");
+    rf.setDefaultConfigFile("config.ini");
     rf.configure(argc, argv);
 
     Calibration module;

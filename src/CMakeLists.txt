@@ -26,3 +26,5 @@ target_link_libraries(${TARGET_NAME}
 )
 
 install(TARGETS ${TARGET_NAME} DESTINATION bin)
+
+yarp_install(FILES ${CMAKE_SOURCE_DIR}/app/conf/config.ini DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${TARGET_NAME})
