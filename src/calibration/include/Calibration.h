@@ -11,9 +11,11 @@
 #include <chrono>
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 
 #include <iCub/iKin/iKinFwd.h>
-#include <vector>
+
+#include <thrift/CalibrationIDL.h>
 
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RFModule.h>
@@ -24,7 +26,8 @@
 #include <yarp/sig/Matrix.h>
 
 
-class Calibration : public yarp::os::RFModule
+class Calibration : public yarp::os::RFModule,
+                    public CalibrationIDL
 {
 private:
 
@@ -67,8 +70,14 @@ private:
     /* Retrieve the end effector pose. */
     yarp::sig::Matrix ee_pose();
 
+    /* RPC port. */
+    yarp::os::Port port_rpc_;
+
 public:
 
+    /*
+     * RFModule interface.
+     */
     bool configure(yarp::os::ResourceFinder& rf) override;
 
     bool close() override;
@@ -76,6 +85,13 @@ public:
     double getPeriod() override;
 
     bool updateModule() override;
+
+    /*
+     * IDL interface.
+     */
+    std::string start() override;
+
+    std::string stop() override;
 };
 
 #endif /* CALIBRATION_H */

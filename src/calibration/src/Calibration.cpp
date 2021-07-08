@@ -38,16 +38,28 @@ bool Calibration::configure(ResourceFinder &rf)
         number_of_poses_ = number_of_poses_value.asInt();
 
     /* Retrieve joints configurations for calibration. */
-    if(!get_joints_configuration(rf))
+    if (!get_joints_configuration(rf))
         return false;
 
     /* Open torso control board. */
-    if(!open_remote_control_board(robot_name, "torso"))
+    if (!open_remote_control_board(robot_name, "torso"))
         return false;
 
-    /* Opem head control board. */
-    if(!open_remote_control_board(robot_name, "head"))
+    /* Open head control board. */
+    if (!open_remote_control_board(robot_name, "head"))
         return false;
+
+    /* Open RPC port and attach to respond handler. */
+    if (!port_rpc_.open("/" + log_name_ + "/rpc:i"))
+    {
+        std::cerr << log_name_ + "::ctor(). Error cannot open input RPC port." << std::endl;
+        return false;
+    }
+    if (!(this->yarp().attachAsServer(port_rpc_)))
+    {
+        std::cerr << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler." << std::endl;
+        return false;
+    }
 
     /* Configure the forward kinematics. */
     icub_head_center_ = iCubHeadCenter("right_" + eye_version);
@@ -198,7 +210,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
 
         /* Get the vector related to the i-th configuration. */
         Bottle* b = configuration.asList();
-        if(b == nullptr)
+        if (b == nullptr)
         {
             std::cerr << log_name_ + "::get_joints_configuration(). Error: while reading joint configuration " + std::to_string(i) + "." << std::endl;
             return false;
@@ -258,4 +270,20 @@ yarp::sig::Matrix Calibration::ee_pose()
     yarp::sig::Matrix H = icub_head_center_.getH(chain * M_PI / 180.0);
 
     return H;
+}
+
+
+std::string Calibration::start()
+{
+    /* TODO. */
+
+    return "Command accepted.";
+}
+
+
+std::string Calibration::stop()
+{
+    /* TODO. */
+
+    return "Command accepted.";
 }
