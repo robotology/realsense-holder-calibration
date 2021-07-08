@@ -15,9 +15,12 @@ find_package(ICUB REQUIRED COMPONENTS iKin)
 
 add_executable(${TARGET_NAME} main.cpp Calibration.cpp Calibration.h)
 
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+
 target_link_libraries(${TARGET_NAME}
                       YARP::YARP_dev
                       YARP::YARP_init
                       YARP::YARP_os
                       YARP::YARP_sig
-                      ICUB::iKin)
+                      ICUB::iKin
+)
