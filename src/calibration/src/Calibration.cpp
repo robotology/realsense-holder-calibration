@@ -122,15 +122,6 @@ bool Calibration::updateModule()
             break;
         }
 
-        case State::Wait:
-        {
-            /* Check if wait time elapsed. */
-            if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start_time_).count() > wait_time_)
-                set_state(State::Store);
-
-            break;
-        }
-
         case State::Quit:
         {
             stop_motion();
@@ -170,6 +161,15 @@ bool Calibration::updateModule()
             stop_motion();
 
             set_state(State::Idle);
+
+            break;
+        }
+
+        case State::Wait:
+        {
+            /* Check if wait time elapsed. */
+            if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start_time_).count() > wait_time_)
+                set_state(State::Store);
 
             break;
         }
