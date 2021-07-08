@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-set(TARGET_NAME calibration)
+set(TARGET_NAME realsense-holder-calibration)
 
 find_package(YARP REQUIRED COMPONENTS dev os sig)
 
@@ -24,3 +24,5 @@ target_link_libraries(${TARGET_NAME}
                       YARP::YARP_sig
                       ICUB::iKin
 )
+
+install(TARGETS ${TARGET_NAME} DESTINATION bin)

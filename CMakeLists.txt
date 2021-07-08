@@ -9,7 +9,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(iCubDemo LANGUAGES CXX)
+project(RealsenseHolderCalibration LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -21,4 +21,13 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     endif()
   endif()
 
+find_package(ICUBcontrib REQUIRED)
+
+list(APPEND CMAKE_MODULE_PATH ${ICUBCONTRIB_MODULE_PATH})
+include(ICUBcontribHelpers)
+include(ICUBcontribOptions)
+icubcontrib_set_default_prefix()
+
 add_subdirectory(src)
+
+icubcontrib_add_uninstall_target()
