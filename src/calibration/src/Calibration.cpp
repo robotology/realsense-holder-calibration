@@ -78,9 +78,7 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
     state_ = State::Idle;
 
     /* Open the BufferedPort. */
-    port_image_in_.open("/image-port-in");
-
-
+    port_image_in_.open("/" + log_name_ + "/rgb:i");
 
     return true;
 }
@@ -164,29 +162,33 @@ bool Calibration::updateModule()
 
         case State::Store:
         {
+
+            /* Read the image from the port. */
+            yarp::sig::ImageOf<yarp::sig::PixelRgb> * image_from_port = port_image_in_.read(false);
+
+            /* Check if the pointer is not null. */
+            if(image_from_port !=nullptr)
+            {
+                /* Save the image. */
+                cv::Mat cv_image = yarp::cv::toCvMat( *image_from_port);
+                cv::imwrite("image-" + std::to_string(counter_poses_) + ".png", cv_image);
+                std::cout<<" Image saved "<<std::endl;
+
+
+            }
+            else
+            {
+                set_state(State::Store);
+                std::cout<<" Waiting for image.. "<<std::endl;
+                break;
+
+            }
+
+
+
             /* Get the end-effector pose. */
             vpPoseVector H = ee_pose();
 
-            bool flag = true;
-
-            while(flag)
-            {
-                /* Read the image from the port. */
-                yarp::sig::ImageOf<yarp::sig::PixelRgb> * image_from_port = port_image_in_.read(false);
-
-                /* Check if the pointer is not null. */
-                if(image_from_port !=nullptr)
-                {
-                    /* Save the image. */
-                    ::cv::Mat cv_image = yarp::cv::toCvMat( *image_from_port);
-                    cv::imwrite("image-" + std::to_string(counter_poses_) + ".png", cv_image);
-                    flag=false;
-
-                }
-
-                std::cout<<" Waiting for the image.. "<<std::endl;
-
-            }
             /* Save the pose. */
             H.saveYAML("./pose_fPe_"+ std::to_string(counter_poses_) + ".yaml", H);
 
