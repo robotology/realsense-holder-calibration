@@ -7,6 +7,8 @@
 
 service CalibrationIDL
 {
+    string go_home();
+    
     string quit();
 
     string start();

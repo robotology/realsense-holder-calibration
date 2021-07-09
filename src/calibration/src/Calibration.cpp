@@ -8,27 +8,28 @@
 #include <Calibration.h>
 
 #include <fstream>
+#include <opencv2/opencv.hpp>
 
+#include <yarp/cv/Cv.h>
+#include <yarp/math/Math.h>
 #include <yarp/os/Bottle.h>
 
-using namespace yarp::sig;
-using namespace yarp::os;
-using namespace iCub::iKin;
 
 
-bool Calibration::configure(ResourceFinder &rf)
+bool Calibration::configure(yarp::os::ResourceFinder &rf)
 {
     /* Get the robot name. */
-    std::string robot_name = rf.check("robot_name", Value("icub")).asString();
+    std::string robot_name = rf.check("robot_name", yarp::os::Value("icub")).asString();
 
     /* Get the wait time. */
-    wait_time_ = rf.check("wait_time", Value(5.0)).asDouble();
+    wait_time_ = rf.check("wait_time", yarp::os::Value(5.0)).asDouble();
 
     /* Get the eye version. */
-    std::string eye_version = rf.check("eye_version", Value("v2")).asString();
+    std::string eye_version = rf.check("eye_version", yarp::os::Value("v2")).asString();
 
     /* Get the number of poses. */
-    Value number_of_poses_value = rf.find("number_of_poses");
+    yarp::os::Value number_of_poses_value = rf.find("number_of_poses");
+
     if (number_of_poses_value.isNull())
     {
         std::cerr << log_name_ + "::ctor(). Error: the provided configuration file does not specify the expected number of poses" << std::endl;
@@ -61,14 +62,25 @@ bool Calibration::configure(ResourceFinder &rf)
         return false;
     }
 
+    if (!(this->yarp().attachAsServer(port_rpc_)))
+    {
+        std::cerr << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler." << std::endl;
+        return false;
+    }
+
     /* Configure the forward kinematics. */
-    icub_head_center_ = iCubHeadCenter("right_" + eye_version);
+    icub_head_center_ = iCub::iKin::iCubHeadCenter("right_" + eye_version);
     icub_head_center_.releaseLink(0);
     icub_head_center_.releaseLink(1);
     icub_head_center_.releaseLink(2);
 
     /* Set the initial state of the module. */
     state_ = State::Idle;
+
+    /* Open the BufferedPort. */
+    port_image_in_.open("/image-port-in");
+
+
 
     return true;
 }
@@ -78,7 +90,7 @@ bool Calibration::close()
 {
     drivers_.at("torso").close();
     drivers_.at("head").close();
-
+    port_image_in_.close();
     return true;
 }
 
@@ -95,6 +107,26 @@ bool Calibration::updateModule()
 
     switch(state)
     {
+
+        case State::GoHome:
+        {
+            /* Go to the home position. */
+            std::vector<int> joints {0, 1, 2};
+            std::vector<double> joints_torso {0, 0, 0};
+            std::vector<double> joints_head {0, 0, 0};
+
+            position_control_["torso"]->positionMove(joints.size(), joints.data(), joints_torso.data());
+            position_control_["head"]->positionMove(joints.size(), joints.data(), joints_head.data());
+
+            set_state(State::Idle);
+
+            /* Reset the counter of the pose. */
+            counter_poses_ = 0;
+
+            break;
+        }
+
+
         case State::Idle:
         {
             /* Do nothing */
@@ -133,23 +165,35 @@ bool Calibration::updateModule()
         case State::Store:
         {
             /* Get the end-effector pose. */
-            Matrix H = ee_pose();
+            vpPoseVector H = ee_pose();
 
-            /* Open the file where to store the pose. */
-            std::ofstream pose_file;
+            bool flag = true;
 
-            /* Store the pose, counting from zero. */
-            pose_file.open("pose_fPe_" + std::to_string(counter_poses_ - 1) + ".yaml");
-            pose_file << H.toString() << std::endl;
+            while(flag)
+            {
+                /* Read the image from the port. */
+                yarp::sig::ImageOf<yarp::sig::PixelRgb> * image_from_port = port_image_in_.read(false);
 
-            /* Close the file. */
-            pose_file.close();
+                /* Check if the pointer is not null. */
+                if(image_from_port !=nullptr)
+                {
+                    /* Save the image. */
+                    ::cv::Mat cv_image = yarp::cv::toCvMat( *image_from_port);
+                    cv::imwrite("image-" + std::to_string(counter_poses_) + ".png", cv_image);
+                    flag=false;
 
-            /* TODO: get the input image and save it on disk. */
+                }
+
+                std::cout<<" Waiting for the image.. "<<std::endl;
+
+            }
+            /* Save the pose. */
+            H.saveYAML("./pose_fPe_"+ std::to_string(counter_poses_) + ".yaml", H);
+
 
             /* Check if the are still configuration to be executed. */
             if (counter_poses_ == number_of_poses_)
-                set_state(State::Idle);
+                set_state(State::GoHome);
             else
                 set_state(State::NextPose);
 
@@ -181,7 +225,7 @@ bool Calibration::updateModule()
 
 bool Calibration::open_remote_control_board(const std::string& robot_name, const std::string& part_name)
 {
-    Property prop;
+    yarp::os::Property prop;
 
     /* Set the property of the device. */
     prop.put("device", "remote_controlboard");
@@ -217,11 +261,12 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
 
 bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
 {
-    const Bottle& poses_group = rf.findGroup("CALIBRATION_POSES");
+
+    const yarp::os::Bottle& poses_group = rf.findGroup("CALIBRATION_POSES");
 
     for(std::size_t i = 0; i < number_of_poses_; i++)
     {
-        Value configuration = poses_group.find("config_" + std::to_string(i));
+        yarp::os::Value configuration = poses_group.find("config_" + std::to_string(i));
 
         if (configuration.isNull())
         {
@@ -230,7 +275,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
         }
 
         /* Get the vector related to the i-th configuration. */
-        Bottle* b = configuration.asList();
+        yarp::os::Bottle* b = configuration.asList();
         if (b == nullptr)
         {
             std::cerr << log_name_ + "::get_joints_configuration(). Error: while reading joint configuration " + std::to_string(i) + "." << std::endl;
@@ -241,7 +286,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
         for (std::size_t j = 0; j < b->size(); j++)
         {
             /* Get the jth value of the single pose. */
-            Value item = b->get(j);
+            yarp::os::Value item = b->get(j);
 
             /*Check if the value is null. */
             if (item.isNull())
@@ -262,14 +307,14 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
 }
 
 
-yarp::sig::Matrix Calibration::ee_pose()
+vpPoseVector Calibration::ee_pose()
 {
     /* Initialize the vector to store the values of the joints. */
     yarp::sig::Vector chain;
 
     /* Max number of joints to set. */
     int max_size = 3;
-
+    std::vector<double> vectorV;
     /* Get the position of the joints. */
     for (const std::string part_name : {"torso", "head"})
     {
@@ -278,19 +323,22 @@ yarp::sig::Matrix Calibration::ee_pose()
 
         yarp::sig::Vector part_chain(size);
         encoders_[part_name]->getEncoders(part_chain.data());
-
         int offset = 0;
         if (part_name == "torso")
             offset = -2;
 
-        for (std::size_t i = 0; i < max_size; i++)
+        for (int i = 0; i < max_size; i++){
             chain.push_back(part_chain(abs(offset + i)));
     }
+}
 
     /* Evaluate the forward kinematics. */
     yarp::sig::Matrix H = icub_head_center_.getH(chain * M_PI / 180.0);
 
-    return H;
+    yarp::sig::Vector axis_angle = yarp::math::dcm2axis(H.submatrix(0, 2, 0, 2));
+    vpPoseVector pose;
+    pose.buildFrom(H(0, 3), H(1, 3), H(2, 3), axis_angle[0] * axis_angle[3], axis_angle[1] * axis_angle[3], axis_angle[2] * axis_angle[3]);
+    return pose;
 }
 
 
@@ -323,6 +371,14 @@ Calibration::State Calibration::get_state()
     return state;
 }
 
+std::string Calibration::go_home()
+{
+    /* Return to the home position. */
+
+    set_state(State::GoHome);
+
+    return "Command accepted.";
+}
 
 std::string Calibration::quit()
 {

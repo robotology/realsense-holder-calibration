@@ -16,15 +16,21 @@
 
 #include <iCub/iKin/iKinFwd.h>
 
+
 #include <thrift/CalibrationIDL.h>
 
+#include <visp3/core/vpPoseVector.h>
+
+#include <yarp/os/BufferedPort.h>
+#include <yarp/os/Network.h>
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RFModule.h>
 #include <yarp/dev/IEncoders.h>
 #include <yarp/dev/IControlMode.h>
 #include <yarp/dev/IPositionControl.h>
 #include <yarp/dev/PolyDriver.h>
-#include <yarp/sig/Matrix.h>
+#include <yarp/sig/all.h>
+
 
 
 class Calibration : public yarp::os::RFModule,
@@ -47,6 +53,8 @@ public:
      * IDL interface.
      */
 
+    std::string go_home() override;
+
     std::string quit() override;
 
     std::string start() override;
@@ -54,7 +62,7 @@ public:
     std::string stop() override;
 
     /* Module state. */
-    enum class State{Idle, NextPose, Wait, Store, Stop, Quit};
+    enum class State{GoHome, Idle, NextPose, Wait, Store, Stop, Quit};
 
 private:
 
@@ -65,7 +73,7 @@ private:
     bool get_joints_configuration(const yarp::os::ResourceFinder& rf);
 
     /* Retrieve the end effector pose. */
-    yarp::sig::Matrix ee_pose();
+    vpPoseVector ee_pose();
 
     /* Stop robot motion. */
     void stop_motion();
@@ -88,6 +96,7 @@ private:
     /* Timer related. */
     std::chrono::steady_clock::time_point start_time_;
 
+    /* Waiting time set in the configuration file. */
     double wait_time_;
 
     /* Number of configuration poses. */
@@ -105,6 +114,9 @@ private:
     /* RPC port and related. */
     yarp::os::Port port_rpc_;
     std::mutex mutex_;
+
+    /* Buffered Port receiving images from the realsense. */
+    yarp::os::BufferedPort <yarp::sig::ImageOf<yarp::sig::PixelRgb>>  port_image_in_;
 
     /* Name to be used in messages. */
     const std::string log_name_ = "Calibration";

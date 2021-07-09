@@ -9,14 +9,17 @@
 
 set(TARGET_NAME realsense-holder-calibration)
 
-find_package(YARP REQUIRED COMPONENTS dev os sig)
+find_package(YARP REQUIRED COMPONENTS dev os sig cv)
 
 find_package(ICUB REQUIRED COMPONENTS iKin)
+
+find_package(OpenCV REQUIRED)
+
+find_package(VISP REQUIRED)
 
 set(${TARGET_NAME}_THRIFT_HDR thrift/idl.thrift)
 
 yarp_add_idl(${TARGET_NAME}_THRIFT_SRC ${${TARGET_NAME}_THRIFT_HDR})
-
 add_executable(${TARGET_NAME}
                include/Calibration.h
                src/main.cpp
@@ -24,7 +27,7 @@ add_executable(${TARGET_NAME}
                ${${TARGET_NAME}_THRIFT_SRC}
 )
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${VISP_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME}
                       YARP::YARP_dev
@@ -32,6 +35,8 @@ target_link_libraries(${TARGET_NAME}
                       YARP::YARP_os
                       YARP::YARP_sig
                       ICUB::iKin
+                      ${VISP_LIBRARIES}
+                      ${OpenCV_LIBS}
 )
 
 install(TARGETS ${TARGET_NAME} DESTINATION bin)
