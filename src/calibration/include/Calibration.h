@@ -16,10 +16,10 @@
 
 #include <iCub/iKin/iKinFwd.h>
 
-
 #include <thrift/CalibrationIDL.h>
 
 #include <visp3/core/vpPoseVector.h>
+#include <visp3/core/vpCameraParameters.h>
 
 #include <yarp/os/BufferedPort.h>
 #include <yarp/os/Network.h>
@@ -72,6 +72,9 @@ private:
     /* Retrieve joints configurations for calibration. */
     bool get_joints_configuration(const yarp::os::ResourceFinder& rf);
 
+    /* Retrieve camera parameters. */
+    bool get_camera_parameters(const yarp::os::ResourceFinder& rf);
+
     /* Retrieve the end effector pose. */
     vpPoseVector ee_pose();
 
@@ -107,6 +110,9 @@ private:
 
     /* Storage for the joints configurations. */
     std::vector<std::vector<double>> joints_;
+
+    /* Storage for camera parameters. */
+    vpCameraParameters cam_parameters_;
 
     /* Module state. */
     State state_;

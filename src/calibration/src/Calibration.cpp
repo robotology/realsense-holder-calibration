@@ -8,7 +8,10 @@
 #include <Calibration.h>
 
 #include <fstream>
+
 #include <opencv2/opencv.hpp>
+
+#include <visp3/core/vpXmlParserCamera.h>
 
 #include <yarp/cv/Cv.h>
 #include <yarp/math/Math.h>
@@ -40,6 +43,10 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
 
     /* Retrieve joints configurations for calibration. */
     if (!get_joints_configuration(rf))
+        return false;
+
+    /* Retrieve camera parameters. */
+    if (!get_camera_parameters(rf))
         return false;
 
     /* Open RGB input port. */
@@ -170,6 +177,13 @@ bool Calibration::updateModule()
                 /* Save the image. */
                 cv::Mat cv_image = yarp::cv::toCvMat(*image_from_port);
                 cv::imwrite("image-" + std::to_string(counter_poses_) + ".png", cv_image);
+
+                /* Save camera configuration file once. */
+                if (counter_poses_ == 1)
+                {
+                    vpXmlParserCamera xml_camera;
+                    xml_camera.save(cam_parameters_, "./camera.xml", "Camera", cv_image.cols, cv_image.rows);
+                }
             }
             else
             {
@@ -295,6 +309,48 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
     }
 
     return true;
+}
+
+
+bool Calibration::get_camera_parameters(const yarp::os::ResourceFinder& rf)
+{
+    const yarp::os::Bottle& camera_group = rf.findGroup("CAMERA_INTRINSICS");
+
+    auto get_parameter = [this, camera_group](const std::string& name)
+    {
+        bool valid = true;
+        double parameter;
+
+        yarp::os::Value value = camera_group.find(name);
+        if (value.isNull() || (!value.isDouble()))
+        {
+            valid = false;
+            std::cerr << log_name_ + "::get_camera_parameters(). Error: missing or invalid CAMERA_INTRINSICS::" + name + "." << std::endl;
+        }
+        else
+            parameter = value.asDouble();
+
+        return std::make_pair(valid, parameter);
+    };
+
+    std::unordered_map<std::string, double> parameters;
+
+    bool valid = true;
+    for (auto param_name : {"fx", "fy", "cx", "cy"})
+    {
+        bool valid_item;
+        std::tie(valid_item, parameters[param_name]) = get_parameter(param_name);
+        valid &= valid_item;
+    }
+
+    if (valid)
+    {
+        cam_parameters_.initPersProjWithDistortion(parameters["fx"], parameters["fy"], parameters["cx"], parameters["cy"], 0.0, 0.0);
+
+        return true;
+    }
+
+    return false;
 }
 
 
