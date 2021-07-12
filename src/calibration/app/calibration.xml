@@ -1,0 +1,32 @@
+<application>
+    <name>Eye-hand calibration</name>
+
+    <module>
+        <name>realsense-holder-calibration</name>
+        <node>localhost</node>
+    </module>
+
+    <module>
+        <name>yarpdev --context realsense-holder-calibration --from config_rs.ini</name>
+        <node>localhost</node>
+    </module>
+
+    <module>
+        <name>yarpview</name>
+        <parameters>--name /realsense-holder-calibration/viewer/rgb:i</parameters>
+        <node>localhost</node>
+    </module>
+
+    <connection>
+        <from>/depthCamera/rgbImage:o</from>
+        <to>/realsense-holder-calibration/rgb:i</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <connection>
+        <from>/depthCamera/rgbImage:o</from>
+        <to>/realsense-holder-calibration/viewer/rgb:i</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+</application>
