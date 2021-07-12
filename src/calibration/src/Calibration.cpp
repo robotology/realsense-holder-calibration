@@ -42,6 +42,9 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
     if (!get_joints_configuration(rf))
         return false;
 
+    /* Open RGB input port. */
+    port_image_in_.open("/realsense-holder-calibration/rgb:i");
+
     /* Open torso control board. */
     if (!open_remote_control_board(robot_name, "torso"))
         return false;
@@ -51,7 +54,7 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
         return false;
 
     /* Open RPC port and attach to respond handler. */
-    if (!port_rpc_.open("/" + log_name_ + "/rpc:i"))
+    if (!port_rpc_.open("/realsense-holder-calibration/rpc:i"))
     {
         std::cerr << log_name_ + "::ctor(). Error cannot open input RPC port." << std::endl;
         return false;
@@ -76,9 +79,6 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
 
     /* Set the initial state of the module. */
     state_ = State::Idle;
-
-    /* Open the BufferedPort. */
-    port_image_in_.open("/" + log_name_ + "/rgb:i");
 
     return true;
 }
@@ -124,7 +124,6 @@ bool Calibration::updateModule()
             break;
         }
 
-
         case State::Idle:
         {
             /* Do nothing */
@@ -162,36 +161,27 @@ bool Calibration::updateModule()
 
         case State::Store:
         {
-
             /* Read the image from the port. */
             yarp::sig::ImageOf<yarp::sig::PixelRgb> * image_from_port = port_image_in_.read(false);
 
             /* Check if the pointer is not null. */
-            if(image_from_port !=nullptr)
+            if (image_from_port != nullptr)
             {
                 /* Save the image. */
-                cv::Mat cv_image = yarp::cv::toCvMat( *image_from_port);
+                cv::Mat cv_image = yarp::cv::toCvMat(*image_from_port);
                 cv::imwrite("image-" + std::to_string(counter_poses_) + ".png", cv_image);
-                std::cout<<" Image saved "<<std::endl;
-
-
             }
             else
             {
                 set_state(State::Store);
-                std::cout<<" Waiting for image.. "<<std::endl;
                 break;
-
             }
-
-
 
             /* Get the end-effector pose. */
             vpPoseVector H = ee_pose();
 
             /* Save the pose. */
             H.saveYAML("./pose_fPe_"+ std::to_string(counter_poses_) + ".yaml", H);
-
 
             /* Check if the are still configuration to be executed. */
             if (counter_poses_ == number_of_poses_)
@@ -263,7 +253,6 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
 
 bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
 {
-
     const yarp::os::Bottle& poses_group = rf.findGroup("CALIBRATION_POSES");
 
     for(std::size_t i = 0; i < number_of_poses_; i++)
@@ -316,7 +305,7 @@ vpPoseVector Calibration::ee_pose()
 
     /* Max number of joints to set. */
     int max_size = 3;
-    std::vector<double> vectorV;
+
     /* Get the position of the joints. */
     for (const std::string part_name : {"torso", "head"})
     {
@@ -329,17 +318,23 @@ vpPoseVector Calibration::ee_pose()
         if (part_name == "torso")
             offset = -2;
 
-        for (int i = 0; i < max_size; i++){
+        for (int i = 0; i < max_size; i++)
             chain.push_back(part_chain(abs(offset + i)));
     }
-}
 
     /* Evaluate the forward kinematics. */
     yarp::sig::Matrix H = icub_head_center_.getH(chain * M_PI / 180.0);
 
     yarp::sig::Vector axis_angle = yarp::math::dcm2axis(H.submatrix(0, 2, 0, 2));
     vpPoseVector pose;
-    pose.buildFrom(H(0, 3), H(1, 3), H(2, 3), axis_angle[0] * axis_angle[3], axis_angle[1] * axis_angle[3], axis_angle[2] * axis_angle[3]);
+    pose.buildFrom
+    (
+        H(0, 3), H(1, 3), H(2, 3),
+        axis_angle[0] * axis_angle[3],
+        axis_angle[1] * axis_angle[3],
+        axis_angle[2] * axis_angle[3]
+    );
+
     return pose;
 }
 

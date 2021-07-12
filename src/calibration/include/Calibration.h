@@ -29,7 +29,7 @@
 #include <yarp/dev/IControlMode.h>
 #include <yarp/dev/IPositionControl.h>
 #include <yarp/dev/PolyDriver.h>
-#include <yarp/sig/all.h>
+#include <yarp/sig/Image.h>
 
 
 
