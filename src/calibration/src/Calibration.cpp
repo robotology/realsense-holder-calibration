@@ -102,7 +102,7 @@ bool Calibration::close()
 
 double Calibration::getPeriod()
 {
-    return 1.0;
+    return 0.1;
 }
 
 
