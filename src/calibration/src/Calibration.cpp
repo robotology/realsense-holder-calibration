@@ -60,6 +60,20 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
     if (!open_remote_control_board(robot_name, "head"))
         return false;
 
+    /* Store original speeds. */
+    torso_speeds_.resize(3);
+    head_speeds_.resize(6);
+    position_control_["torso"]->getRefSpeeds(torso_speeds_.data());
+    position_control_["head"]->getRefSpeeds(head_speeds_.data());
+    std::vector<double> tmp {head_speeds_[0], head_speeds_[1], head_speeds_[2]};
+    head_speeds_ = tmp;
+
+    /* Set safe speeds. */
+    std::vector<int> joints {0, 1, 2};
+    std::vector<double> speeds {5.0, 5.0, 5.0};
+    position_control_["torso"]->setRefSpeeds(joints.size(), joints.data(), speeds.data());
+    position_control_["head"]->setRefSpeeds(joints.size(), joints.data(), speeds.data());
+
     /* Open RPC port and attach to respond handler. */
     if (!port_rpc_.open("/realsense-holder-calibration/rpc:i"))
     {
@@ -93,6 +107,11 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
 
 bool Calibration::close()
 {
+    /* Restore original speeds. */
+    std::vector<int> joints {0, 1, 2};
+    position_control_["torso"]->setRefSpeeds(joints.size(), joints.data(), torso_speeds_.data());
+    position_control_["head"]->setRefSpeeds(joints.size(), joints.data(), head_speeds_.data());
+
     drivers_.at("torso").close();
     drivers_.at("head").close();
     port_image_in_.close();

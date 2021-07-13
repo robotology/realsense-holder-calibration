@@ -96,6 +96,10 @@ private:
     std::unordered_map<std::string, yarp::dev::IControlMode*> control_mode_;
     std::unordered_map<std::string, yarp::dev::IPositionControl*> position_control_;
 
+    /* Joints speeds at startup. */
+    std::vector<double> torso_speeds_;
+    std::vector<double> head_speeds_;
+
     /* Timer related. */
     std::chrono::steady_clock::time_point start_time_;
 
