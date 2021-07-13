@@ -58,7 +58,7 @@ Print the [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Ches
 > **Note:** Make sure that the chessboard is completely visibile in all calibration poses, e.g. by checking on the `yarpview`. If not, move the chessboard or change the torso and head joints configuration in the local configuration file, close the module by typing `quit`, re-open it and start the procedure again.
 8. The robot will go back in home position (torso and neck set to zero) after the data acquisition is complete.
 
-## How to obtain the calbration matrix
+## How to obtain the calibration matrix
 
 Open a terminal and run `realsense-holder-calibration-process` having the following synopsis:
 ```
