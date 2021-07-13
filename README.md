@@ -2,7 +2,7 @@
 
 ![image](https://user-images.githubusercontent.com/6014499/125424864-4f1a5d42-202f-4103-825a-93a4e78c3165.png)
 
-A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotology-documentation/doc/html/classiCub_1_1iKin_1_1iCubHeadCenter.html) to RealSense transformation matrix when using the RealSense holder
+A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotology-documentation/doc/html/classiCub_1_1iKin_1_1iCubHeadCenter.html) to RealSense transformation matrix when using the iCub RealSense holder.
 
 ## Dependencies
 - [YARP](https://github.com/robotology/yarp)
