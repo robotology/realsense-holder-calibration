@@ -69,7 +69,7 @@ where
 - `<height>` is the height of the chessboard
 - `<square_size>` is the length of the side of the square in the chessboard (in meters)
 
-If the provided [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Chessboard.pdf) is used, then `<width> = 9`, `<height> = 6` and `<square_size (meters)> = 0.036`. Please verify the length using a ruler given that options of the printer might alter it.
+If the provided [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Chessboard.pdf) is used, then `<width> = 9`, `<height> = 6` and `<square_size (meters)> = 0.036`. Please verify the length using a ruler given that the options of your printer might alter it.
 
 After running the script, the list of collected images will be shown. Click using the left button of the mouse to move to the next pose. It is important that the chessboard is detected in **all** the images.
 
