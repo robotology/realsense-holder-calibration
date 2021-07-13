@@ -112,9 +112,12 @@ bool Calibration::close()
     position_control_["torso"]->setRefSpeeds(joints.size(), joints.data(), torso_speeds_.data());
     position_control_["head"]->setRefSpeeds(joints.size(), joints.data(), head_speeds_.data());
 
+    /* Close driver. */
     drivers_.at("torso").close();
     drivers_.at("head").close();
     port_image_in_.close();
+    port_rpc_.close();
+
     return true;
 }
 
