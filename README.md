@@ -63,7 +63,7 @@ Synopsis: realsense-holder-calibration-process <path_to_visp_build> <path_to_ima
 ```
 where 
 - `<path_to_visp_build>` is the [ViSP](https://visp.inria.fr/install/) build folder
-- `<path_to_images>` is `<data_folder>` (as indicated in the section [how to collect data](https://github.com/robotology-playground/realsense-holder-calibration/blob/main/README.md#how-to-collect-data)
+- `<path_to_images>` is `<data_folder>` (as indicated in the section [how to collect data](https://github.com/robotology-playground/realsense-holder-calibration/blob/main/README.md#how-to-collect-data))
 - `<number_poses` is the same as the parameter `number_of_poses` in the configuration file
 - `<width>` is the width of chessboard
 - `<height>` is the height of the chessboard
