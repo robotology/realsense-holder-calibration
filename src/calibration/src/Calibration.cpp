@@ -263,7 +263,7 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
     /* Try to open the driver. */
     if (!drivers_[part_name].open(prop))
     {
-        std::cerr << "Calibration::open_remote_control_board(). Error: cannot open " + part_name + " driver." << std::endl;
+        std::cerr << log_name_ + "::open_remote_control_board(). Error: cannot open " + part_name + " driver." << std::endl;
         return false;
     }
 
@@ -274,7 +274,7 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
     ok &= drivers_[part_name].view(position_control_[part_name]);
     if (!ok)
     {
-        std::cerr << "Calibration::open_remote_control_board(). Error: cannot open " + part_name + " interfaces." << std::endl;
+        std::cerr << log_name_ + "::open_remote_control_board(). Error: cannot open " + part_name + " interfaces." << std::endl;
         return false;
     }
 
