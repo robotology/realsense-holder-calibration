@@ -2,7 +2,7 @@
 
 ![image](https://user-images.githubusercontent.com/6014499/125424864-4f1a5d42-202f-4103-825a-93a4e78c3165.png)
 
-A tool for calibrating the iCub neck to RealSense transformation matrix when using the RealSense holder
+A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotology-documentation/doc/html/classiCub_1_1iKin_1_1iCubHeadCenter.html) to RealSense transformation matrix when using the RealSense holder
 
 ## Dependencies
 - [YARP](https://github.com/robotology/yarp)
@@ -91,4 +91,11 @@ Transformation from iCubHeadCenter to RealSense RGB frame:
 
 The output can also be found in `txt` and `yaml` format in `<data_folder>/eMc.txt` and `<data_folder>/eMc.yaml`. The latter provides the transformation as a 6-dimensional vector in the form `(x, y, z, u_x, u_y, u_z)` where `(u_x, u_y, u_z)` is the product between the axis and the angle of the axis/angle parametrization of the rotation matrix.
 
+### Maintainers
 
+This repository is maintained by:
+
+| | |
+|:---:|:---:|
+| [<img src="https://github.com/xenvre.png" width="40">](https://github.com/xenvre) | [@xenvre](https://github.com/xenvre) |
+| [<img src="https://github.com/gabrielecaddeo.png" width="40">](https://github.com/gabrielecaddeo) | [@gabrielecaddeo](https://github.com/gabrielecaddeo) |
