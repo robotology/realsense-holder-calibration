@@ -61,7 +61,13 @@ Open a terminal and run `realsense-holder-calibration-process` having the follow
 ```
 Synopsis: realsense-holder-calibration-process <path_to_visp_build> <path_to_images> <number_poses> <width> <height> <square_size (meters)>
 ```
-where `<path_to_images>` is `<data_folder>` (as indicated in the section #how-to-collect-data) and `<square_size>` is the length of the side of the square in the chessboard (in meters).
+where 
+- `<path_to_visp_build>` is the [ViSP](https://visp.inria.fr/install/) build folder
+- `<path_to_images>` is `<data_folder>` (as indicated in the section [how to collect data](https://github.com/robotology-playground/realsense-holder-calibration/blob/main/README.md#how-to-collect-data)
+- `<number_poses` is the same as the parameter `number_of_poses` in the configuration file
+- `<width>` is the width of chessboard
+- `<height>` is the height of the chessboard
+- `<square_size>` is the length of the side of the square in the chessboard (in meters)
 
 If the provided [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Chessboard.pdf) is used, then `<width> = 9`, `<height> = 6` and `<square_size (meters)> = 0.036`. Please verify the length using a ruler given that options of the printer might alter it.
 
