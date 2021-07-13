@@ -47,10 +47,10 @@ Print the [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Ches
 3. Open the `yarpmanager` from `<data_folder>`
 4. Open the `Eye-hand_calibration` application
 5. Run all the applications and connect the ports
-> This will also run the `yarpdev` for the RealSense camera. If a different camera is used, please do not run the `yarpdev` and change the input port names in the `yarpmanager` window accordingly
+> This will also run the `yarpdev` for the RealSense camera. If a different camera is used, please do not run the `yarpdev` and change the input port names in the `yarpmanager` window accordingly.
 6. Open an RPC client via `yarp rpc /realsense-holder-calibration/rpc:i`
 7. Type `start` to start the data acquisition
-> **Warning**: the robot will execute the poses as provided in the configuration file and will wait for `wait_time` before moving to the next pose. Robot motion can be stopped at any time by typing `stop` in the RPC client. 
+> **Warning**: the robot will execute the poses as provided in the configuration file and will wait for `wait_time` before moving to the next pose. Robot motion can be stopped at any time by typing `stop` in the RPC client. The parameter `wait_time` can be specified in the configuration file.
 
 > **Note:** Make sure that the chessboard is completely visibile in all calibration poses, e.g. by checking on the `yarpview`. If not, move the chessboard or change the torso and head joints configuration in the local configuration file, close the module by typing `quit`, re-open it and start the procedure again.
 8. The robot will go back in home position (torso and neck set to zero) after the data acquisition is complete.
