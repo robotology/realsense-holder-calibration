@@ -42,5 +42,5 @@ target_link_libraries(${TARGET_NAME}
 install(TARGETS ${TARGET_NAME} DESTINATION bin)
 install(PROGRAMS scripts/calibrate.sh DESTINATION bin RENAME realsense-holder-calibration-process)
 
-yarp_install(FILES app/realsense-holder-calibration.xml app/calibration_sim.xml DESTINATION ${ICUBCONTRIB_APPLICATIONS_TEMPLATES_INSTALL_DIR})
+yarp_install(FILES app/realsense-holder-calibration.xml DESTINATION ${ICUBCONTRIB_APPLICATIONS_TEMPLATES_INSTALL_DIR})
 yarp_install(FILES app/conf/config.ini app/conf/config_rs.ini DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${TARGET_NAME})
