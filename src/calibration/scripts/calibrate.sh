@@ -9,7 +9,7 @@
 
 if [ $# -ne 6 ]
 then
-    echo "Synopsis: bash calibrate.sh <path_to_visp_build> <path_to_images> <number_poses> <width> <height> <square_size (meters)>"
+    echo "Synopsis: "$(basename $0)" <path_to_visp_build> <path_to_images> <number_poses> <width> <height> <square_size (meters)>"
     exit 1
 fi
 
@@ -25,3 +25,8 @@ CALIBRATOR_PATH=$VISP_BUILD_DIR/tutorial/calibration/tutorial-hand-eye-calibrati
 
 (cd $IMAGES_PATH && $CAMERA_POSE_ESTIMATOR_PATH -w $W -h $H --square_size $SIZE --camera_name Camera --intrinsic ./camera.xml --input ./image-%d.png)
 (cd $IMAGES_PATH && $CALIBRATOR_PATH --ndata $N_POSES)
+clear
+echo "Transformation from iCubHeadCenter to RealSense RGB frame:"
+echo ""
+cat $IMAGES_PATH/eMc.txt
+echo ""
