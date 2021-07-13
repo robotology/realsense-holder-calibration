@@ -9,7 +9,6 @@
 #define CALIBRATION_H
 
 #include <chrono>
-#include <iostream>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
