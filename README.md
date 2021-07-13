@@ -20,7 +20,7 @@ cmake ../
 make install
 ```
 
-Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatically detect where to install the package. If the [robotology-superbuild](https://github.com/robotology/robotology-superbuild) is used, the package will be installed in superbuild install path.
+Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatically detect where to install the package. If the [robotology-superbuild](https://github.com/robotology/robotology-superbuild) is used, the package will be installed in the superbuild install path.
 
 ## How to configure
 
@@ -35,7 +35,7 @@ Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatica
 
 If a `RealSense` camera is used and it is accessed via the associated `yarpdev`, it is possible to obtain the intrinsic parameters of the RGB sensor using
 ```
-yarp rpc /depthCamera/rpc:i`
+yarp rpc /depthCamera/rpc:i
 > visr get intp
 ```
 
