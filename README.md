@@ -33,11 +33,23 @@ Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatica
    - suitable calibration poses are provided (the order is `torso_yaw`, `torso_roll`, `torso_pitch`, `neck_pitch`, `neck_roll`, `neck_yaw`)
    - the number of poses `number_of_poses` matches the actual number of poses
 
+#### How to obtain the intrinsic parameters of the RealSense
 If a `RealSense` camera is used and it is accessed via the associated `yarpdev`, it is possible to obtain the intrinsic parameters of the RGB sensor using
 ```
 yarp rpc /depthCamera/rpc:i
 > visr get intp
 ```
+
+#### iCubGenova01 configuration files
+If the robot of interest is `iCubGenova01` the configuration files `config_iCubGenova01_holder_tilt.ini` and `config_iCubGenova01_holder_no_tilt.ini` are available in the context `realsense-holder-calibration` after a succesfull installation of the package. They can be loaded by running the application using the parameter 
+```
+--from config_iCubGenova01_holder[_no]_tilt.ini
+```
+| `no_tilt` variant  | `tilt` variant |
+| ------------- | ------------- |
+|<p align="center"> <img src=https://user-images.githubusercontent.com/9716288/99807903-6c4fc300-2b40-11eb-9856-4725f4e541b7.png width="150"> </p> | <p align="center">  <img src=https://user-images.githubusercontent.com/9716288/101136146-3107c680-360d-11eb-808d-3b109b9579d5.png width="150"> </p> |
+
+
 
 ## How to prepare
 
