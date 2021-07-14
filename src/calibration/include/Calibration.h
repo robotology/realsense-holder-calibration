@@ -61,7 +61,7 @@ public:
     std::string stop() override;
 
     /* Module state. */
-    enum class State{GoHome, Idle, NextPose, Wait, Store, Stop, Quit};
+    enum class State{GoHome, Idle, NextPose, Quit, Store, Stop, Wait};
 
 private:
 
