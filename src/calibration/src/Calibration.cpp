@@ -323,6 +323,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
                           << std::to_string(i) + "-th configuration." << std::endl;
                 return false;
             }
+            
             /*Check if the value is a double. */
             if (!item.isDouble())
             {
