@@ -7,4 +7,5 @@
 #
 #===============================================================================
 
+add_subdirectory(forward-kinematics)
 add_subdirectory(calibration)
