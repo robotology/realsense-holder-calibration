@@ -93,10 +93,7 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
     }
 
     /* Configure the forward kinematics. */
-    icub_head_center_ = iCub::iKin::iCubHeadCenter("right_" + eye_version);
-    icub_head_center_.releaseLink(0);
-    icub_head_center_.releaseLink(1);
-    icub_head_center_.releaseLink(2);
+    fk_ = std::make_unique<ForwardKinematics>(robot_name, eye_version);
 
     /* Set the initial state of the module. */
     state_ = State::Idle;
@@ -269,7 +266,6 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
 
     /* Open the views. */
     bool ok = true;
-    ok &= drivers_[part_name].view(encoders_[part_name]);
     ok &= drivers_[part_name].view(control_mode_[part_name]);
     ok &= drivers_[part_name].view(position_control_[part_name]);
     if (!ok)
@@ -387,30 +383,7 @@ bool Calibration::get_camera_parameters(const yarp::os::ResourceFinder& rf)
 
 vpPoseVector Calibration::ee_pose()
 {
-    /* Initialize the vector to store the values of the joints. */
-    yarp::sig::Vector chain;
-
-    /* Max number of joints to set. */
-    int max_size = 3;
-
-    /* Get the position of the joints. */
-    for (const std::string part_name : {"torso", "head"})
-    {
-        int size;
-        encoders_[part_name]->getAxes(&size);
-
-        yarp::sig::Vector part_chain(size);
-        encoders_[part_name]->getEncoders(part_chain.data());
-        int offset = 0;
-        if (part_name == "torso")
-            offset = -2;
-
-        for (int i = 0; i < max_size; i++)
-            chain.push_back(part_chain(abs(offset + i)));
-    }
-
-    /* Evaluate the forward kinematics. */
-    yarp::sig::Matrix H = icub_head_center_.getH(chain * M_PI / 180.0);
+    yarp::sig::Matrix H = fk_->ee_pose();
 
     yarp::sig::Vector axis_angle = yarp::math::dcm2axis(H.submatrix(0, 2, 0, 2));
     vpPoseVector pose;

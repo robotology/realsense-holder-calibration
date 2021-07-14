@@ -13,8 +13,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <iCub/iKin/iKinFwd.h>
-
 #include <thrift/CalibrationIDL.h>
 
 #include <visp3/core/vpPoseVector.h>
@@ -24,12 +22,12 @@
 #include <yarp/os/Network.h>
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RFModule.h>
-#include <yarp/dev/IEncoders.h>
 #include <yarp/dev/IControlMode.h>
 #include <yarp/dev/IPositionControl.h>
 #include <yarp/dev/PolyDriver.h>
 #include <yarp/sig/Image.h>
 
+#include <ForwardKinematics.h>
 
 
 class Calibration : public yarp::os::RFModule,
@@ -86,12 +84,8 @@ private:
     /* Get module state. */
     Calibration::State get_state();
 
-    /* Forward kinematics of the robot neck. */
-    iCub::iKin::iCubHeadCenter icub_head_center_;
-
     /* Devices required to control the robot position. */
     std::unordered_map<std::string, yarp::dev::PolyDriver> drivers_;
-    std::unordered_map<std::string, yarp::dev::IEncoders*> encoders_;
     std::unordered_map<std::string, yarp::dev::IControlMode*> control_mode_;
     std::unordered_map<std::string, yarp::dev::IPositionControl*> position_control_;
 
@@ -116,6 +110,9 @@ private:
 
     /* Storage for camera parameters. */
     vpCameraParameters cam_parameters_;
+
+    /* Forward kinematics. */
+    std::unique_ptr<ForwardKinematics> fk_;
 
     /* Module state. */
     State state_;

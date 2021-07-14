@@ -30,6 +30,7 @@ add_executable(${TARGET_NAME}
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${VISP_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME}
+                      realsense-holder-forward-kinematics
                       YARP::YARP_dev
                       YARP::YARP_init
                       YARP::YARP_os
