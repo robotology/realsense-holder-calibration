@@ -95,13 +95,33 @@ After all images have been considered, the script will provide the calibration m
 ```
 Transformation from iCubHeadCenter to RealSense RGB frame:
 
-0.9986644239  0.03441962741  -0.03853125538  -0.05194061188
--0.03017476666  0.9939304797  0.1057907607  -0.1212326766
-0.0419386677  -0.1044867974  0.9936416141  0.02958705726
-0  0  0  1
+ 0.9986644239   0.03441962741 -0.03853125538 -0.05194061188
+-0.03017476666  0.9939304797   0.1057907607  -0.1212326766
+ 0.0419386677  -0.1044867974   0.9936416141   0.02958705726
+ 0              0              0              1
 ```
 
 The output can also be found in `txt` and `yaml` format in `<data_folder>/eMc.txt` and `<data_folder>/eMc.yaml`. The latter provides the transformation as a 6-dimensional vector in the form `(x, y, z, u_x, u_y, u_z)` where `(u_x, u_y, u_z)` is the product between the axis and the angle of the axis/angle parametrization of the rotation matrix.
+
+#### Calibration matrices of pre-existing holders
+
+```
+Variant no-tilt
+
+ 0.9987039757   0.02941588291 -0.04153401947 -0.05439578875
+-0.02502241057  0.9944078874   0.102600353   -0.1173573506
+ 0.04431983652 -0.1014280992   0.9938551669   0.02902883402
+ 0              0              0              1
+```
+
+```
+Variant tilt
+
+ 0.9986796783   0.03750826048 -0.0351002926 -0.05794521346
+-0.001885871738 0.7095898996   0.7046123884 -0.05406200527
+ 0.0513355981  -0.7036158787   0.7087237484  0.06424080642
+ 0              0              0             1
+```
 
 ### Maintainers
 
