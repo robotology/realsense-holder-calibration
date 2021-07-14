@@ -88,7 +88,7 @@ If the provided [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenC
 
 After running the script, the list of collected images will be shown. Click using the left button of the mouse to move to the next pose. It is important that the chessboard is detected in **all** the images.
 
-![image](https://user-images.githubusercontent.com/6014499/125421147-00ba8399-006d-4d5e-ae55-ecb3894c6732.png)
+<img src=https://user-images.githubusercontent.com/6014499/125697702-0cac5ca3-33db-4ffd-9aea-89e96903358a.png width="300">
 
 After all images have been considered, the script will provide the calibration matrix (from the [iCubHeadCenter](https://robotology.github.io/robotology-documentation/doc/html/classiCub_1_1iKin_1_1iCubHeadCenter.html) frame to the RealSense RGB frame) as output, e.g. 
 
