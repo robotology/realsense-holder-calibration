@@ -43,4 +43,10 @@ install(TARGETS ${TARGET_NAME} DESTINATION bin)
 install(PROGRAMS scripts/calibrate.sh DESTINATION bin RENAME realsense-holder-calibration-process)
 
 yarp_install(FILES app/realsense-holder-calibration.xml DESTINATION ${ICUBCONTRIB_APPLICATIONS_TEMPLATES_INSTALL_DIR})
-yarp_install(FILES app/conf/config.ini app/conf/config_rs.ini DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${TARGET_NAME})
+yarp_install(FILES
+             app/conf/config.ini
+             app/conf/config_iCubGenova01_holder_tilt.ini
+             app/conf/config_iCubGenova01_holder_no_tilt.ini
+             app/conf/config_rs.ini
+             DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${TARGET_NAME}
+)
