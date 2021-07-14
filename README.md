@@ -49,7 +49,7 @@ If the robot of interest is `iCubGenova01` the configuration files `config_iCubG
 | ------------- | ------------- |
 |<p align="center"> <img src=https://user-images.githubusercontent.com/9716288/99807903-6c4fc300-2b40-11eb-9856-4725f4e541b7.png width="150"> </p> | <p align="center">  <img src=https://user-images.githubusercontent.com/9716288/101136146-3107c680-360d-11eb-808d-3b109b9579d5.png width="150"> </p> |
 
-
+Please check the intrinsic parameters of your camera, and eventually change them, before using these configuration files.
 
 ## How to prepare
 
@@ -84,7 +84,7 @@ where
 - `<height>` is the height of the chessboard
 - `<square_size>` is the length of the side of the square in the chessboard (in meters)
 
-If the provided [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Chessboard.pdf) is used, then `<width> = 9`, `<height> = 6` and `<square_size (meters)> = 0.036`. Please verify the length using a ruler given that the options of your printer might alter it.
+If the provided [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Chessboard.pdf) is used, then `<width> = 9`, `<height> = 6` and `<square_size (meters)> = 0.036` (assuming that it has been printed on a A3 paper). Please verify the length using a ruler given that the options of your printer might alter it.
 
 After running the script, the list of collected images will be shown. Click using the left button of the mouse to move to the next pose. It is important that the chessboard is detected in **all** the images.
 
