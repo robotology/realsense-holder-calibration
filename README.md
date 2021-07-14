@@ -30,7 +30,7 @@ Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatica
    - the camera intrinsics in `[CAMERA_INTRINSICS]` match those of the adopted RGB input
    - the `robot_name` is the correct one
    - the `eye_version` matches that of the used robot
-   - suitable calibration poses are provided (the order is `torso_yaw`, `torso_pitch`, `torso_roll`, `neck_pitch`, `neck_roll`, `neck_yaw`)
+   - suitable calibration poses are provided (the order is `torso_yaw`, `torso_roll`, `torso_pitch`, `neck_pitch`, `neck_roll`, `neck_yaw`)
    - the number of poses `number_of_poses` matches the actual number of poses
 
 If a `RealSense` camera is used and it is accessed via the associated `yarpdev`, it is possible to obtain the intrinsic parameters of the RGB sensor using
