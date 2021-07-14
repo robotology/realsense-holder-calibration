@@ -323,6 +323,14 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
                           << std::to_string(i) + "-th configuration." << std::endl;
                 return false;
             }
+            /*Check if the value is a double. */
+            if (!item.isDouble())
+            {
+                std::cerr << log_name_ + "::get_joints_configuration(). Error: the"
+                          << std::to_string(j) + "-th element of the "
+                          << std::to_string(i) + "-th configuration is not a double." << std::endl;
+                return false;
+            }
 
             entry.push_back(item.asDouble());
         }
