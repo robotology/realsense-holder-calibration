@@ -1,0 +1,8 @@
+<application>
+    <name>Eye-hand calibration publisher</name>
+
+    <module>
+        <name>realsense-holder-publisher</name>
+        <node>localhost</node>
+    </module>
+</application>
