@@ -24,6 +24,8 @@ Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatica
 
 ## How to configure
 
+### Module `realsense-holder-calibration`
+
 1. Copy the template `yarpmanager` application from `<package_install_dir>/share/ICUBcontrib/templates/realsense-holder-calibration.xml` to e.g. `.local/share/yarp/applications`
 2. Import the context of this package using `yarp-config context --import realsense-holder-calibration`
 3. Open the local configuration file `.local/share/yarp/context/realsense-holder-calibration/config.ini` and make sure that:
@@ -50,6 +52,18 @@ If the robot of interest is `iCubGenova01` the configuration files `config_iCubG
 |<p align="center"> <img src=https://user-images.githubusercontent.com/9716288/99807903-6c4fc300-2b40-11eb-9856-4725f4e541b7.png width="150"> </p> | <p align="center">  <img src=https://user-images.githubusercontent.com/9716288/101136146-3107c680-360d-11eb-808d-3b109b9579d5.png width="150"> </p> |
 
 Please check the intrinsic parameters of your camera, and eventually change them, before using these configuration files.
+
+### Module `realsense-holder-publisher`
+
+1. Copy the template `yarpmanager` application from `<package_install_dir>/share/ICUBcontrib/templates/realsense-holder-publisher.xml` to e.g. `.local/share/yarp/applications`
+2. Import the context of this package using `yarp-config context --import realsense-holder-publisher`
+3. The local configuration file `.local/share/yarp/context/realsense-holder-publisher/config.ini` will contain:
+   - the robot name
+   - the desired updae period of the module
+   - the eye version of the robot
+   - (optional) the absolute path to the calibration matrix file (produced by the module `realsense-holder-calibration`)
+
+If the path of the calibration matrix file is not provided, the module will search for it in ``.local/share/yarp/context/realsense-holder-publisher/eMc.txt`.
 
 ## How to prepare
 
@@ -122,6 +136,17 @@ Variant tilt
  0.0513355981  -0.7036158787   0.7087237484  0.06424080642
  0              0              0             1
 ```
+
+## How to get the camera pose in the iCub root frame
+
+1. Make sure that iCub is up and running (the torso and the head are required)
+2. Open the `yarpmanager` from `<data_folder>`
+3. Open the `Eye-hand_calibration publisher` application
+4. Specify the desired configuration file in the parameters using `--from <nome_of_config_file>` if any
+5. Run `realsense-holder-publisher`
+
+The pose of the camera will be available from `/realsense-holder-publisher/pose:o` as a list of `<x> <y> <z> <axis_x> <axis_y> <axis_z> <angle>` numbers where `<x>`, `<y>` and `<z>` are the 3D coordinates of the camera in the robot root frame, while the `<axis_?>` and `<angle>` are the axis/angle representation of the rotation matrix from the robot root frame to the camera reference frame.
+
 
 ### Maintainers
 
