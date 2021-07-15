@@ -59,11 +59,11 @@ Please check the intrinsic parameters of your camera, and eventually change them
 2. Import the context of this package using `yarp-config context --import realsense-holder-publisher`
 3. The local configuration file `.local/share/yarp/context/realsense-holder-publisher/config.ini` will contain:
    - the robot name
-   - the desired updae period of the module
+   - the desired update period of the module
    - the eye version of the robot
    - (optional) the absolute path to the calibration matrix file (produced by the module `realsense-holder-calibration`)
 
-If the path of the calibration matrix file is not provided, the module will search for it in ``.local/share/yarp/context/realsense-holder-publisher/eMc.txt`.
+If the path of the calibration matrix file is not provided, the module will search for it in `.local/share/yarp/context/realsense-holder-publisher/eMc.txt`.
 
 ## How to prepare
 
