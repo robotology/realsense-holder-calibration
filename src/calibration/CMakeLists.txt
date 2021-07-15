@@ -9,13 +9,11 @@
 
 set(TARGET_NAME realsense-holder-calibration)
 
-find_package(YARP REQUIRED COMPONENTS dev os sig cv)
-
-find_package(ICUB REQUIRED COMPONENTS iKin)
-
 find_package(OpenCV REQUIRED)
 
 find_package(VISP REQUIRED)
+
+find_package(YARP REQUIRED COMPONENTS dev os sig cv)
 
 set(${TARGET_NAME}_THRIFT_HDR thrift/idl.thrift)
 
@@ -31,11 +29,11 @@ target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/in
 
 target_link_libraries(${TARGET_NAME}
                       realsense-holder-forward-kinematics
+                      YARP::YARP_cv
                       YARP::YARP_dev
                       YARP::YARP_init
                       YARP::YARP_os
                       YARP::YARP_sig
-                      ICUB::iKin
                       ${VISP_LIBRARIES}
                       ${OpenCV_LIBS}
 )
