@@ -9,7 +9,7 @@
 
 set(TARGET_NAME realsense-holder-forward-kinematics)
 
-find_package(YARP REQUIRED COMPONENTS dev os sig cv)
+find_package(YARP REQUIRED COMPONENTS dev os sig)
 
 find_package(ICUB REQUIRED COMPONENTS iKin)
 
@@ -21,7 +21,7 @@ add_library(${TARGET_NAME}
 target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(${TARGET_NAME}
-                      PRIVATE
+                      PUBLIC
                       YARP::YARP_dev
                       YARP::YARP_init
                       YARP::YARP_os
