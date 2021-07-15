@@ -16,6 +16,7 @@
 #include <yarp/cv/Cv.h>
 #include <yarp/math/Math.h>
 #include <yarp/os/Bottle.h>
+#include <yarp/os/LogStream.h>
 
 
 
@@ -35,7 +36,7 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
 
     if (number_of_poses_value.isNull())
     {
-        std::cerr << log_name_ + "::ctor(). Error: the provided configuration file does not specify the expected number of poses" << std::endl;
+        yError() << log_name_ + "::ctor(). Error: the provided configuration file does not specify the expected number of poses";
         return false;
     }
     else
@@ -77,18 +78,18 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
     /* Open RPC port and attach to respond handler. */
     if (!port_rpc_.open("/realsense-holder-calibration/rpc:i"))
     {
-        std::cerr << log_name_ + "::ctor(). Error cannot open input RPC port." << std::endl;
+        yError() << log_name_ + "::ctor(). Error cannot open input RPC port.";
         return false;
     }
     if (!(this->yarp().attachAsServer(port_rpc_)))
     {
-        std::cerr << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler." << std::endl;
+        yError() << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler.";
         return false;
     }
 
     if (!(this->yarp().attachAsServer(port_rpc_)))
     {
-        std::cerr << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler." << std::endl;
+        yError() << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler.";
         return false;
     }
 
@@ -260,7 +261,7 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
     /* Try to open the driver. */
     if (!drivers_[part_name].open(prop))
     {
-        std::cerr << log_name_ + "::open_remote_control_board(). Error: cannot open " + part_name + " driver." << std::endl;
+        yError() << log_name_ + "::open_remote_control_board(). Error: cannot open " + part_name + " driver.";
         return false;
     }
 
@@ -270,7 +271,7 @@ bool Calibration::open_remote_control_board(const std::string& robot_name, const
     ok &= drivers_[part_name].view(position_control_[part_name]);
     if (!ok)
     {
-        std::cerr << log_name_ + "::open_remote_control_board(). Error: cannot open " + part_name + " interfaces." << std::endl;
+        yError() << log_name_ + "::open_remote_control_board(). Error: cannot open " + part_name + " interfaces.";
         return false;
     }
 
@@ -293,7 +294,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
 
         if (configuration.isNull())
         {
-            std::cerr << log_name_ + "::get_joints_configuration(). Error: joint configuration " + std::to_string(i) + " is missing." << std::endl;
+            yError() << log_name_ + "::get_joints_configuration(). Error: joint configuration " + std::to_string(i) + " is missing.";
             return false;
         }
 
@@ -301,7 +302,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
         yarp::os::Bottle* b = configuration.asList();
         if (b == nullptr)
         {
-            std::cerr << log_name_ + "::get_joints_configuration(). Error: while reading joint configuration " + std::to_string(i) + "." << std::endl;
+            yError() << log_name_ + "::get_joints_configuration(). Error: while reading joint configuration " + std::to_string(i) + ".";
             return false;
         }
 
@@ -314,18 +315,18 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
             /* Check if the value is null. */
             if (item.isNull())
             {
-                std::cerr << log_name_ + "::get_joints_configuration(). Error: cannot read "
-                          << std::to_string(j + 1) + "-th element of the "
-                          << std::to_string(i + 1) + "-th configuration." << std::endl;
+                yError() << log_name_ + "::get_joints_configuration(). Error: cannot read "
+                         << std::to_string(j + 1) + "-th element of the "
+                         << std::to_string(i + 1) + "-th configuration.";
                 return false;
             }
 
             /* Check if the value is a double. */
             if (!item.isDouble())
             {
-                std::cerr << log_name_ + "::get_joints_configuration(). Error: the "
-                          << std::to_string(j + 1) + "-th element of the "
-                          << std::to_string(i + 1) + "-th configuration is not a double." << std::endl;
+                yError() << log_name_ + "::get_joints_configuration(). Error: the "
+                         << std::to_string(j + 1) + "-th element of the "
+                         << std::to_string(i + 1) + "-th configuration is not a double.";
                 return false;
             }
 
@@ -352,7 +353,7 @@ bool Calibration::get_camera_parameters(const yarp::os::ResourceFinder& rf)
         if (value.isNull() || (!value.isDouble()))
         {
             valid = false;
-            std::cerr << log_name_ + "::get_camera_parameters(). Error: missing or invalid CAMERA_INTRINSICS::" + name + "." << std::endl;
+            yError() << log_name_ + "::get_camera_parameters(). Error: missing or invalid CAMERA_INTRINSICS::" + name + ".";
         }
         else
             parameter = value.asDouble();

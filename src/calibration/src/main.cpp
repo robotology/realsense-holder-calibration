@@ -11,6 +11,7 @@
 #include <Calibration.h>
 
 #include <yarp/os/ResourceFinder.h>
+#include <yarp/os/LogStream.h>
 
 using namespace yarp::os;
 
@@ -20,7 +21,7 @@ int main (int argc, char** argv)
     Network yarp;
     if (!yarp.checkNetwork())
     {
-        std::cerr << "YARP network not available." << std::endl;
+        yError() << "YARP network not available.";
 
         return EXIT_FAILURE;
     }
