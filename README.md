@@ -140,7 +140,7 @@ Variant tilt
 ## How to get the camera pose in the iCub root frame
 
 1. Make sure that iCub is up and running (the torso and the head are required)
-2. Open the `yarpmanager` from `<data_folder>`
+2. Open the `yarpmanager`
 3. Open the `Eye-hand_calibration publisher` application
 4. Specify the desired configuration file in the parameters using `--from <nome_of_config_file>` if any
 5. Run `realsense-holder-publisher`
