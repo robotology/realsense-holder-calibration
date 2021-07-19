@@ -87,12 +87,6 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
 
-    if (!(this->yarp().attachAsServer(port_rpc_)))
-    {
-        yError() << log_name_ << "::configure. Error: cannot attach RPC port to the respond handler.";
-        return false;
-    }
-
     /* Configure the forward kinematics. */
     fk_ = std::make_unique<ForwardKinematics>(robot_name, eye_version);
 
