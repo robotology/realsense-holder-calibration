@@ -13,8 +13,8 @@ A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotolo
 
 ## How to build
 
-```
-git clone https://github.com/robotology/realsense-holder-calibration
+```console
+git clone https://github.com/robotology/realsense-holder-calibration.git
 mkdir build
 cd build
 cmake ../
@@ -38,14 +38,14 @@ Note: this repository use CMake `ICUBcontribHelpers` helpers and will automatica
 
 #### How to obtain the intrinsic parameters of the RealSense
 If a `RealSense` camera is used and it is accessed via the associated `yarpdev`, it is possible to obtain the intrinsic parameters of the RGB sensor using
-```
+```console
 yarp rpc /depthCamera/rpc:i
 > visr get intp
 ```
 
 #### iCubGenova01 configuration files
 If the robot of interest is `iCubGenova01` the configuration files `config_iCubGenova01_holder_tilt.ini` and `config_iCubGenova01_holder_no_tilt.ini` are available in the context `realsense-holder-calibration` after a succesfull installation of the package. They can be loaded by running the application using the parameter 
-```
+```console
 --from config_iCubGenova01_holder[_no]_tilt.ini
 ```
 | `no_tilt` variant  | `tilt` variant |
@@ -88,7 +88,7 @@ Print the [chessboard](https://visp-doc.inria.fr/download/calib-grid/OpenCV_Ches
 ## How to obtain the calibration matrix
 
 Open a terminal and run `realsense-holder-calibration-process` having the following synopsis:
-```
+```console
 Synopsis: realsense-holder-calibration-process <path_to_visp_build> <path_to_images> <number_poses> <width> <height> <square_size (meters)>
 ```
 where 
