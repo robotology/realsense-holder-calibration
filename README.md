@@ -1,4 +1,5 @@
-# realsense-holder-calibration
+realsense-holder-calibration
+============================
 
 ![image](https://user-images.githubusercontent.com/6014499/125424864-4f1a5d42-202f-4103-825a-93a4e78c3165.png)
 
@@ -13,7 +14,7 @@ A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotolo
 ## How to build
 
 ```
-git clone https://github.com/robotology-playground/realsense-holder-calibration
+git clone https://github.com/robotology/realsense-holder-calibration
 mkdir build
 cd build
 cmake ../
