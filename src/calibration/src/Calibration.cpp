@@ -26,7 +26,7 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
     std::string robot_name = rf.check("robot_name", yarp::os::Value("icub")).asString();
 
     /* Get the wait time. */
-    wait_time_ = rf.check("wait_time", yarp::os::Value(5.0)).asDouble();
+    wait_time_ = rf.check("wait_time", yarp::os::Value(5.0)).asFloat64();
 
     /* Get the eye version. */
     std::string eye_version = rf.check("eye_version", yarp::os::Value("v2")).asString();
@@ -40,7 +40,7 @@ bool Calibration::configure(yarp::os::ResourceFinder &rf)
         return false;
     }
     else
-        number_of_poses_ = number_of_poses_value.asInt();
+        number_of_poses_ = number_of_poses_value.asInt32();
 
     /* Retrieve joints configurations for calibration. */
     if (!get_joints_configuration(rf))
@@ -316,7 +316,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
             }
 
             /* Check if the value is a double. */
-            if (!item.isDouble())
+            if (!item.isFloat64())
             {
                 yError() << log_name_ + "::get_joints_configuration(). Error: the "
                          << std::to_string(j + 1) + "-th element of the "
@@ -324,7 +324,7 @@ bool Calibration::get_joints_configuration(const yarp::os::ResourceFinder& rf)
                 return false;
             }
 
-            entry.push_back(item.asDouble());
+            entry.push_back(item.asFloat64());
         }
 
         joints_.push_back(entry);
@@ -344,13 +344,13 @@ bool Calibration::get_camera_parameters(const yarp::os::ResourceFinder& rf)
         double parameter;
 
         yarp::os::Value value = camera_group.find(name);
-        if (value.isNull() || (!value.isDouble()))
+        if (value.isNull() || (!value.isFloat64()))
         {
             valid = false;
             yError() << log_name_ + "::get_camera_parameters(). Error: missing or invalid CAMERA_INTRINSICS::" + name + ".";
         }
         else
-            parameter = value.asDouble();
+            parameter = value.asFloat64();
 
         return std::make_pair(valid, parameter);
     };

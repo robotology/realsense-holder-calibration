@@ -31,7 +31,7 @@ bool Publisher::configure(ResourceFinder &rf)
     std::string eye_version = rf.check("eye_version", Value("v2")).asString();
 
     /* Get the period in seconds. */
-    period_ = rf.check("period", Value(0.01)).asDouble();
+    period_ = rf.check("period", Value(0.01)).asFloat64();
 
     /* Get the path to the file containing the calibration matrix. */
     std::string path = rf.check("calibration_file_path", Value("")).asString();
