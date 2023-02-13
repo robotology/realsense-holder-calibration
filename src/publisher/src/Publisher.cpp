@@ -30,6 +30,16 @@ bool Publisher::configure(ResourceFinder &rf)
     /* Get the period in seconds. */
     period_ = rf.check("period", Value(0.01)).asFloat64();
 
+    /* Get the optional ROS publishing flag. */
+    publish_ros_ = rf.check("enable_ros", Value(false)).asBool();
+    std::string src_frame_id;
+    std::string dst_frame_id;
+    if (publish_ros_)
+    {
+        src_frame_id = rf.check("ros_src_frame_id", Value("icub_root")).asString();
+        dst_frame_id = rf.check("ros_dst_frame_id", Value("icub_realsense")).asString();
+    }
+
     /* Get the path to the file containing the calibration matrix. */
     std::string path = rf.check("calibration_file_path", Value("")).asString();
     if (path.empty())
@@ -84,6 +94,10 @@ bool Publisher::configure(ResourceFinder &rf)
     /* Configure output via YARP. */
     output_yarp_ = std::make_unique<PublisherYarp>("/realsense-holder-publisher/pose:o");
 
+    /* Configure output via ROS. */
+    if (publish_ros_)
+        output_ros_ = std::make_unique<PublisherRos>("realsense_holder_publisher", src_frame_id, dst_frame_id);
+
     return true;
 }
 
@@ -108,6 +122,8 @@ bool Publisher::updateModule()
     Matrix root_to_camera = root_to_center * calibration_matrix_;
 
     output_yarp_->set_transform(root_to_camera);
+    if (publish_ros_)
+        output_ros_->set_transform(root_to_camera);
 
     return true;
 }

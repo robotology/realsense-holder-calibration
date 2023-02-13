@@ -15,6 +15,7 @@
 #include <yarp/sig/Matrix.h>
 
 #include <ForwardKinematics.h>
+#include <PublisherRos.h>
 #include <PublisherYarp.h>
 
 
@@ -40,6 +41,10 @@ private:
 
     /* Output via YARP. */
     std::unique_ptr<PublisherYarp> output_yarp_;
+
+    /* Output via ROS (optional). */
+    bool publish_ros_;
+    std::unique_ptr<PublisherRos> output_ros_;
 
     /* Period. */
     double period_;

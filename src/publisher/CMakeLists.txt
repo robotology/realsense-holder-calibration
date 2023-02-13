@@ -16,8 +16,10 @@ find_package(YARP REQUIRED COMPONENTS os sig)
 add_executable(${TARGET_NAME}
                src/main.cpp
                include/Publisher.h
+               include/PublisherRos.h
                include/PublisherYarp.h
                src/Publisher.cpp
+               src/PublisherRos.cpp
                src/PublisherYarp.cpp
 )
 
