@@ -11,6 +11,10 @@ A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotolo
 - [icub-contrib-common](https://github.com/robotology/icub-contrib-common)
 - [ViSP](https://visp.inria.fr/install/)
 
+## Run-time dependencies
+- [yarp-devices-ros](https://github.com/robotology/yarp-devices-ros)
+> If you need to stream the transform between the robot root frame and the camera frame as a TF transform in ROS, the devices from the above repositories should be part of your YARP installation. If streaming to ROS is not required, it is not required to install them.
+
 ## How to build
 
 ```console
@@ -63,6 +67,11 @@ Please check the intrinsic parameters of your camera, and eventually change them
    - the desired update period of the module
    - the eye version of the robot
    - (optional) the absolute path to the calibration matrix file (produced by the module `realsense-holder-calibration`)
+
+   Additionally, the following parameters are also available:
+   - the `use_ros` parameter which enable/disables streaming to ROS as a TF transform
+   - the `ros_src_frame_id` that decides the parent id of the TF transform
+   - the `ros_dest_frame_id` that decides the child id of the TF transform
 
 If the path of the calibration matrix file is not provided, the module will search for it in `.local/share/yarp/context/realsense-holder-publisher/eMc.txt`.
 
@@ -144,9 +153,12 @@ Variant tilt
 2. Open the `yarpmanager`
 3. Open the `Eye-hand_calibration publisher` application
 4. Specify the desired configuration file in the parameters using `--from <nome_of_config_file>` if any
+   > if ROS is enabled with the option `use_ros`, it is required to run the `yarpserver` with the `--ros` option and a running instance of `roscore`
 5. Run `realsense-holder-publisher`
 
 The pose of the camera will be available from `/realsense-holder-publisher/pose:o` as a list of `<x> <y> <z> <axis_x> <axis_y> <axis_z> <angle>` numbers where `<x>`, `<y>` and `<z>` are the 3D coordinates of the camera in the robot root frame, while the `<axis_?>` and `<angle>` are the axis/angle representation of the rotation matrix from the robot root frame to the camera reference frame.
+
+If ROS is enabled, the pose will be streamed as a TF transform between the frames `ros_src_frame_id` and `ros_dst_frame_id`.
 
 
 ### Maintainers
