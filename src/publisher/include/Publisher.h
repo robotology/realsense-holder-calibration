@@ -9,13 +9,13 @@
 #ifndef PUBLISHER_H
 #define PUBLISHER_H
 
-#include <yarp/os/BufferedPort.h>
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RFModule.h>
 
 #include <yarp/sig/Matrix.h>
 
 #include <ForwardKinematics.h>
+#include <PublisherYarp.h>
 
 
 class Publisher : public yarp::os::RFModule
@@ -38,8 +38,8 @@ private:
     /* iCub forward kinematics. */
     std::unique_ptr<ForwardKinematics> fk_;
 
-    /* Output port. */
-    yarp::os::BufferedPort<yarp::sig::Vector> port_output_;
+    /* Output via YARP. */
+    std::unique_ptr<PublisherYarp> output_yarp_;
 
     /* Period. */
     double period_;

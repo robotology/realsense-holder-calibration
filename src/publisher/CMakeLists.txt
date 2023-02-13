@@ -16,7 +16,9 @@ find_package(YARP REQUIRED COMPONENTS os sig)
 add_executable(${TARGET_NAME}
                src/main.cpp
                include/Publisher.h
+               include/PublisherYarp.h
                src/Publisher.cpp
+               src/PublisherYarp.cpp
 )
 
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${VISP_INCLUDE_DIRS})
