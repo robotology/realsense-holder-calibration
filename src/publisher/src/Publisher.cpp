@@ -12,12 +12,9 @@
 #include <visp3/core/vpHomogeneousMatrix.h>
 #include <visp3/core/vpException.h>
 
-#include <yarp/math/Math.h>
-#include <yarp/os/Bottle.h>
 #include <yarp/os/LogStream.h>
 #include <yarp/sig/Vector.h>
 
-using namespace yarp::math;
 using namespace yarp::os;
 using namespace yarp::sig;
 
@@ -32,6 +29,16 @@ bool Publisher::configure(ResourceFinder &rf)
 
     /* Get the period in seconds. */
     period_ = rf.check("period", Value(0.01)).asFloat64();
+
+    /* Get the optional ROS publishing flag. */
+    publish_ros_ = rf.check("enable_ros", Value(false)).asBool();
+    std::string src_frame_id;
+    std::string dst_frame_id;
+    if (publish_ros_)
+    {
+        src_frame_id = rf.check("ros_src_frame_id", Value("icub_root")).asString();
+        dst_frame_id = rf.check("ros_dst_frame_id", Value("icub_realsense")).asString();
+    }
 
     /* Get the path to the file containing the calibration matrix. */
     std::string path = rf.check("calibration_file_path", Value("")).asString();
@@ -81,16 +88,15 @@ bool Publisher::configure(ResourceFinder &rf)
         return false;
     }
 
-    /* Open output port. */
-    if(!port_output_.open("/realsense-holder-publisher/pose:o"))
-    {
-        yError() << log_name_ + "::ctor(). Error: cannot open the output port.";
-
-        return false;
-    }
-
     /* Configure the forward kinematics. */
     fk_ = std::make_unique<ForwardKinematics>(robot_name, eye_version);
+
+    /* Configure output via YARP. */
+    output_yarp_ = std::make_unique<PublisherYarp>("/realsense-holder-publisher/pose:o");
+
+    /* Configure output via ROS. */
+    if (publish_ros_)
+        output_ros_ = std::make_unique<PublisherRos>("realsense_holder_publisher", src_frame_id, dst_frame_id);
 
     return true;
 }
@@ -98,9 +104,6 @@ bool Publisher::configure(ResourceFinder &rf)
 
 bool Publisher::close()
 {
-    /* Close output port. */
-    port_output_.close();
-
     return true;
 }
 
@@ -118,20 +121,9 @@ bool Publisher::updateModule()
 
     Matrix root_to_camera = root_to_center * calibration_matrix_;
 
-    /* Send to port. */
-    Vector axis_angle = dcm2axis(root_to_camera.submatrix(0, 2, 0, 2));
-
-    Vector& pose = port_output_.prepare();
-    pose.resize(7);
-    pose(0) = root_to_camera(0, 3);
-    pose(1) = root_to_camera(1, 3);
-    pose(2) = root_to_camera(2, 3);
-    pose(3) = axis_angle(0);
-    pose(4) = axis_angle(1);
-    pose(5) = axis_angle(2);
-    pose(6) = axis_angle(3);
-
-    port_output_.write();
+    output_yarp_->set_transform(root_to_camera);
+    if (publish_ros_)
+        output_ros_->set_transform(root_to_camera);
 
     return true;
 }
