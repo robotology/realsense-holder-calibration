@@ -19,8 +19,10 @@ PublisherRos::PublisherRos(const std::string& node_name, const std::string& sour
     device_properties.put("device", "frameTransformSet_nwc_ros2");
 
     Property general_properties;
-    general_properties.put("period", 1.0 / 100.0);
-    general_properties.put("asynch_pub", 0);
+    /* Run the thread at 1 Hz as the transform publishing will be driven by the thread calling this::setTransform(). */
+    general_properties.put("period", 1.0);
+    general_properties.put("refresh_interval", 0.1);
+    general_properties.put("asynch_pub", 1);
 
     Property ros_properties;
     ros_properties.put("ft_node", node_name);
