@@ -12,8 +12,8 @@ A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotolo
 - [ViSP](https://visp.inria.fr/install/)
 
 ## Run-time dependencies
-- [yarp-devices-ros](https://github.com/robotology/yarp-devices-ros)
-> If you need to stream the transform between the robot root frame and the camera frame as a TF transform in ROS, the devices from the above repositories should be part of your YARP installation. If streaming to ROS is not required, it is not required to install them.
+- [yarp-devices-ros2](https://github.com/robotology/yarp-devices-ros2)
+> If you need to stream the transform between the robot root frame and the camera frame as a TF transform in `ROS 2`, the devices from the above repositories should be part of your YARP installation. If streaming to `ROS 2` is not required, it is not required to install them.
 
 ## How to build
 
