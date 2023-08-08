@@ -69,7 +69,7 @@ Please check the intrinsic parameters of your camera, and eventually change them
    - (optional) the absolute path to the calibration matrix file (produced by the module `realsense-holder-calibration`)
 
    Additionally, the following parameters are also available:
-   - the `use_ros` parameter which enable/disables streaming to ROS as a TF transform
+   - the `use_ros2` parameter which enable/disables streaming to ROS 2 as a TF transform
    - the `ros_src_frame_id` that decides the parent id of the TF transform
    - the `ros_dest_frame_id` that decides the child id of the TF transform
 
@@ -153,7 +153,6 @@ Variant tilt
 2. Open the `yarpmanager`
 3. Open the `Eye-hand_calibration publisher` application
 4. Specify the desired configuration file in the parameters using `--from <nome_of_config_file>` if any
-   > if ROS is enabled with the option `use_ros`, it is required to run the `yarpserver` with the `--ros` option and a running instance of `roscore`
 5. Run `realsense-holder-publisher`
 
 The pose of the camera will be available from `/realsense-holder-publisher/pose:o` as a list of `<x> <y> <z> <axis_x> <axis_y> <axis_z> <angle>` numbers where `<x>`, `<y>` and `<z>` are the 3D coordinates of the camera in the robot root frame, while the `<axis_?>` and `<angle>` are the axis/angle representation of the rotation matrix from the robot root frame to the camera reference frame.
