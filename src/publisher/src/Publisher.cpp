@@ -30,8 +30,8 @@ bool Publisher::configure(ResourceFinder &rf)
     /* Get the period in seconds. */
     period_ = rf.check("period", Value(0.01)).asFloat64();
 
-    /* Get the optional ROS publishing flag. */
-    publish_ros_ = rf.check("use_ros", Value(false)).asBool();
+    /* Get the optional ROS 2 publishing flag. */
+    publish_ros_ = rf.check("use_ros2", Value(false)).asBool();
     std::string src_frame_id;
     std::string dst_frame_id;
     if (publish_ros_)

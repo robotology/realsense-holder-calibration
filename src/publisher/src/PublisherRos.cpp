@@ -16,17 +16,17 @@ PublisherRos::PublisherRos(const std::string& node_name, const std::string& sour
 {
     /* Configure the transform setter device. */
     Property device_properties;
-    device_properties.put("device", "frameTransformSet_nwc_ros");
+    device_properties.put("device", "frameTransformSet_nwc_ros2");
 
     Property general_properties;
     general_properties.put("period", 1.0 / 100.0);
     general_properties.put("asynch_pub", 0);
 
     Property ros_properties;
-    ros_properties.put("ft_node", "/" + node_name);
+    ros_properties.put("ft_node", node_name);
 
     device_properties.addGroup("GENERAL") = general_properties;
-    device_properties.addGroup("ROS") = ros_properties;
+    device_properties.addGroup("ROS2") = ros_properties;
 
     bool outcome = true;
     outcome &= driver_.open(device_properties);
