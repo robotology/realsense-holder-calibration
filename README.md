@@ -10,6 +10,7 @@ A tool for estimating the [iCubHeadCenter](https://robotology.github.io/robotolo
 - [iCub](https://github.com/robotology/icub-main)
 - [icub-contrib-common](https://github.com/robotology/icub-contrib-common)
 - [ViSP](https://visp.inria.fr/install/)
+  > Note: if built from scratch, the CMake option `USE_YARP` can be safely disabled as it is not required for the software of this repository.
 
 ## Run-time dependencies
 - [yarp-devices-ros2](https://github.com/robotology/yarp-devices-ros2)
